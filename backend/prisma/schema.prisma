@@ -1,0 +1,225 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sport {
+  cricket
+  football
+}
+
+enum RoomPhase {
+  waiting_for_opponent
+  toss_pending
+  toss_result
+  choice_pending
+  in_progress
+  innings_break
+  half_time
+  extra_time
+  shootout
+  finished
+}
+
+model Room {
+  id                  String      @id @default(uuid())
+  code                String      @unique @db.VarChar(6)
+  sport               Sport
+  teamAName           String
+  teamBName           String
+  teamAClaimToken     String?
+  teamBClaimToken     String?
+  hostDeviceId        String?
+  phase               RoomPhase   @default(waiting_for_opponent)
+  tossWinner          String?     // 'teamA' | 'teamB'
+  tossChoice          String?     // 'bat' | 'bowl' | 'kickoff' | 'side'
+  battingTeam         String?     // 'teamA' | 'teamB' (cricket only)
+  scoreA              Int         @default(0)
+  scoreB              Int         @default(0)
+  wicketsA            Int         @default(0)
+  wicketsB            Int         @default(0)
+
+  // Cricket rules & state
+  oversPerInnings     Int         @default(5)
+  playersPerSide      Int         @default(11)
+  maxWickets          Int         @default(10)
+  wideNoBallRerun     Boolean     @default(true)
+  innings             Int         @default(1) // 1 or 2
+  legalBallsInInnings Int         @default(0)
+  firstInningsRuns    Int?
+  firstInningsWickets Int?
+  target              Int?        // firstInningsRuns + 1
+
+  // Football rules & state
+  halfMinutes         Int         @default(15)
+  halves              Int         @default(2)
+  drawRule            String      @default("draw") // 'draw' | 'golden_goal' | 'shootout'
+  mercyGoalLead       Int?
+  currentHalf         Int         @default(1)
+  clockRunning        Boolean     @default(false)
+  clockAccumulatedMs  Int         @default(0)
+  clockLastStartedAt  DateTime?
+  shootoutScoreA      Int         @default(0)
+  shootoutScoreB      Int         @default(0)
+
+  // Results & completion
+  resultWinner        String?     // 'teamA' | 'teamB' | 'draw' | 'tie'
+  resultText          String?     @db.Text
+  finishedAt          DateTime?
+  endedReason         String?     // 'overs_complete' | 'all_out' | 'target_chased' | 'time_up' | 'mercy_rule' | 'host_ended'
+
+  // Feature A additions
+  revision            Int         @default(0)
+  currentBatterId     String?
+  currentNonStrikerId String?
+  currentBowlerId     String?
+  lastEventJson       Json?
+  teamAColor          String      @default("#2563EB")
+  teamBColor          String      @default("#DC2626")
+
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  events              RoomEvent[]
+  players             Player[]
+  balls               Ball[]
+  goalEvents          GoalEvent[]
+
+  @@map("rooms")
+}
+
+model Player {
+  id        String   @id @default(uuid())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  team      String   // 'teamA' | 'teamB'
+  name      String   @db.VarChar(20)
+  position  Int      // 0, 1, 2...
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([roomId, team, position])
+  @@index([roomId])
+  @@map("players")
+}
+
+model Ball {
+  id                String    @id // Client UUID for idempotency
+  roomId            String
+  room              Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  team              String    // batting team: 'teamA' | 'teamB'
+  innings           Int       // 1 or 2
+  overNumber        Int       // 0-indexed over: 0, 1, 2...
+  ballInOver        Int       // 1..6 (count of legal balls in this over)
+  isLegal           Boolean   @default(true)
+  batterId          String?
+  nonStrikerId      String?
+  bowlerId          String?
+  runsOffBat        Int       @default(0)
+  extraType         String    @default("none") // 'none' | 'wide' | 'no_ball' | 'bye' | 'leg_bye'
+  extraRuns         Int       @default(0)
+  isWicket          Boolean   @default(false)
+  wicketType        String?   // 'bowled' | 'caught' | 'run_out' | 'lbw' | 'stumped' | 'other'
+  dismissedPlayerId String?
+  fielderId         String?
+  seq               Int       // strictly increasing sequence number
+  commentary        String?
+  createdAt         DateTime  @default(now())
+  deletedAt         DateTime? // soft delete for undo
+
+  @@index([roomId, team, deletedAt])
+  @@index([roomId, seq])
+  @@map("balls")
+}
+
+model GoalEvent {
+  id         String    @id // Client UUID for idempotency
+  roomId     String
+  room       Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  team       String    // credited team: 'teamA' | 'teamB'
+  scorerId   String?
+  assistId   String?
+  goalType   String    @default("goal") // 'goal' | 'penalty' | 'own_goal'
+  minute     Int       @default(0)
+  half       Int       @default(1)
+  period     String    @default("regular") // 'regular' | 'extra_time' | 'shootout'
+  seq        Int
+  commentary String?
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime? // soft delete for undo
+
+  @@index([roomId, team, deletedAt])
+  @@index([roomId, seq])
+  @@map("goal_events")
+}
+
+model RoomEvent {
+  id          String   @id @default(uuid())
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  team        String   // 'A', 'B', 'teamA', 'teamB'
+  eventType   String   // 'dot', 'wide', 'no_ball', 'bye', 'cricket_run', 'cricket_wicket', 'cricket_extra', 'football_goal', 'football_card', 'football_stat', 'half_start', 'half_end', 'match_end'
+  value       Int?
+  label       String?
+  isHighlight String?  // 'six', 'goal', 'wicket'
+  ball        String?  // e.g. '3.4'
+  minute      Int?     // e.g. 14
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([roomId])
+  @@map("room_events")
+}
+
+model Turf {
+  id           String     @id @default(uuid())
+  name         String
+  city         String
+  area         String?
+  address      String?
+  lat          Float
+  lng          Float
+  sports       Json       // JSON string array e.g. ["cricket", "football"]
+  pricePerHour Float
+  rating       Float
+  reviewsCount Int        @default(0)
+  amenities    Json?      // JSON string array
+  imageUrl     String?    @db.Text
+  createdAt    DateTime   @default(now())
+
+  slots        TurfSlot[]
+
+  @@map("turfs")
+}
+
+model TurfSlot {
+  id         String    @id @default(uuid())
+  turfId     String
+  turf       Turf      @relation(fields: [turfId], references: [id], onDelete: Cascade)
+  startsAt   DateTime
+  endsAt     DateTime
+  price      Float?
+  isBooked   Boolean   @default(false)
+
+  bookings   Booking[]
+
+  @@index([turfId])
+  @@map("turf_slots")
+}
+
+model Booking {
+  id             String   @id @default(uuid())
+  slotId         String
+  slot           TurfSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  bookedByDevice String
+  playerName     String?
+  phone          String?
+  createdAt      DateTime @default(now())
+
+  @@index([slotId])
+  @@map("bookings")
+}

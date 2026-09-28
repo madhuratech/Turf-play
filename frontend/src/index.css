@@ -1,0 +1,479 @@
+/* ==========================================================================
+   Kick & Crease Design System Tokens & Base Styles
+   Night Stadium Under Floodlights Palette + Daytime Mode
+   ========================================================================== */
+
+:root {
+  /* Fonts */
+  --font-scoreboard: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Dark Theme: "Night stadium under floodlights" (Default) */
+  --bg-primary: #0F1A14;         /* deep green-black */
+  --bg-surface: #14281E;         /* dark pitch turf */
+  --bg-surface-elevated: #1B3A2B;/* pitch green surfaces */
+  --bg-surface-active: #234B38;  /* lighter pitch highlight */
+  --border-subtle: #244635;      /* subtle turf boundary border */
+  --border-strong: #35634B;      /* crisp boundary line */
+
+  /* Text & Contrast */
+  --text-primary: #F5F3EA;       /* chalk-white */
+  --text-secondary: #ADC2B5;     /* muted floodlit mist */
+  --text-tertiary: #6E8B7A;      /* stadium shadow */
+  --text-inverse: #0F1A14;
+
+  /* Accents */
+  --accent-floodlight: #F2C94C;  /* amber floodlight accent */
+  --accent-floodlight-glow: rgba(242, 201, 76, 0.22);
+  --accent-floodlight-dark: #C69F2C;
+
+  /* Status Colors */
+  --status-live: #E85D4A;        /* scoreboard red for live / urgent */
+  --status-live-pulse: rgba(232, 93, 74, 0.45);
+  --status-wicket: #E85D4A;
+  --status-boundary: #38D9A9;    /* pitch green glow for boundaries */
+  --status-goal: #F2C94C;        /* amber highlight for football goal */
+  --status-success: #2ECC71;
+
+  /* Shadows & Scoreboard Depth */
+  --shadow-scoreboard: 0 12px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-amber: 0 0 24px rgba(242, 201, 76, 0.28);
+
+  /* Layout */
+  --max-content-width: 1040px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  --transition-fast: 150ms ease;
+  --transition-standard: 240ms ease;
+}
+
+/* Light / Daytime Variant (prefers-color-scheme or manual override) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg-primary: #F4F6F3;
+    --bg-surface: #FFFFFF;
+    --bg-surface-elevated: #E5EFE9;
+    --bg-surface-active: #D4E5DB;
+    --border-subtle: #D0DFD6;
+    --border-strong: #A8C4B5;
+
+    --text-primary: #112017;
+    --text-secondary: #3D5A4A;
+    --text-tertiary: #678374;
+    --text-inverse: #FFFFFF;
+
+    --accent-floodlight: #D49B0E;
+    --accent-floodlight-glow: rgba(212, 155, 14, 0.18);
+    --accent-floodlight-dark: #A57805;
+
+    --status-live: #D93822;
+    --status-live-pulse: rgba(217, 56, 34, 0.3);
+    --status-boundary: #109648;
+    --status-goal: #D49B0E;
+
+    --shadow-scoreboard: 0 8px 24px -4px rgba(17, 32, 23, 0.12), 0 0 0 1px rgba(17, 32, 23, 0.08);
+    --shadow-card: 0 2px 12px rgba(17, 32, 23, 0.08);
+    --shadow-btn: 0 2px 6px rgba(17, 32, 23, 0.12);
+  }
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #F4F6F3;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #E5EFE9;
+  --bg-surface-active: #D4E5DB;
+  --border-subtle: #D0DFD6;
+  --border-strong: #A8C4B5;
+
+  --text-primary: #112017;
+  --text-secondary: #3D5A4A;
+  --text-tertiary: #678374;
+  --text-inverse: #FFFFFF;
+
+  --accent-floodlight: #D49B0E;
+  --accent-floodlight-glow: rgba(212, 155, 14, 0.18);
+  --accent-floodlight-dark: #A57805;
+
+  --status-live: #D93822;
+  --status-live-pulse: rgba(217, 56, 34, 0.3);
+  --status-boundary: #109648;
+  --status-goal: #D49B0E;
+
+  --shadow-scoreboard: 0 8px 24px -4px rgba(17, 32, 23, 0.12), 0 0 0 1px rgba(17, 32, 23, 0.08);
+  --shadow-card: 0 2px 12px rgba(17, 32, 23, 0.08);
+  --shadow-btn: 0 2px 6px rgba(17, 32, 23, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #0F1A14;
+  --bg-surface: #14281E;
+  --bg-surface-elevated: #1B3A2B;
+  --bg-surface-active: #234B38;
+  --border-subtle: #244635;
+  --border-strong: #35634B;
+
+  --text-primary: #F5F3EA;
+  --text-secondary: #ADC2B5;
+  --text-tertiary: #6E8B7A;
+  --text-inverse: #0F1A14;
+
+  --accent-floodlight: #F2C94C;
+  --accent-floodlight-glow: rgba(242, 201, 76, 0.22);
+  --accent-floodlight-dark: #C69F2C;
+
+  --status-live: #E85D4A;
+  --status-live-pulse: rgba(232, 93, 74, 0.45);
+  --status-wicket: #E85D4A;
+  --status-boundary: #38D9A9;
+  --status-goal: #F2C94C;
+
+  --shadow-scoreboard: 0 12px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================================================
+   CSS Resets & Accessibility
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 3px solid var(--accent-floodlight);
+  outline-offset: 2px;
+}
+
+/* Scoreboard Condensed Headings */
+h1, h2, h3, h4, .font-scoreboard {
+  font-family: var(--font-scoreboard);
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+/* ==========================================================================
+   ANIMATIONS — MINIMAL & SPORT SPECIFIC ONLY
+   ========================================================================== */
+
+/* 1. Subtle pulsing dot next to "LIVE" on scoreboard */
+@keyframes live-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 var(--status-live-pulse);
+    opacity: 0.85;
+  }
+  70% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 7px rgba(232, 93, 74, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(232, 93, 74, 0);
+    opacity: 0.85;
+  }
+}
+
+.live-pulse-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--status-live);
+  animation: live-pulse 2s infinite ease-in-out;
+}
+
+/* 2. Score Flip / Count-Up Stadium Digit Transition (<300ms) */
+@keyframes score-flip {
+  0% {
+    transform: translateY(-8px) scale(1.05);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(2px) scale(0.98);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.score-digit-updating {
+  animation: score-flip 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+}
+
+/* 3. Sport Moment Animations (< 600ms):
+   Cricket Six: Small cricket ball icon arcing across score panel
+   Football Goal: Quick net ripple / flash behind goal count */
+@keyframes cricket-six-arc {
+  0% {
+    transform: translate(-100%, 30px) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0%, -24px) rotate(180deg) scale(1.1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(110%, 15px) rotate(360deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+.anim-cricket-six {
+  animation: cricket-six-arc 540ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes goal-net-ripple {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+    filter: drop-shadow(0 0 0px var(--accent-floodlight));
+  }
+  40% {
+    opacity: 0.85;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 16px var(--accent-floodlight));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+}
+
+.anim-football-goal {
+  animation: goal-net-ripple 580ms ease-out forwards;
+}
+
+/* 4. Coin Toss Flip Animation (~1.2s, skippable, standout moment) */
+@keyframes coin-flip-spin {
+  0% {
+    transform: translateY(0) rotateY(0deg) scale(0.95);
+  }
+  25% {
+    transform: translateY(-55px) rotateY(450deg) scale(1.18);
+  }
+  50% {
+    transform: translateY(-80px) rotateY(900deg) scale(1.22);
+  }
+  75% {
+    transform: translateY(-35px) rotateY(1350deg) scale(1.08);
+  }
+  90% {
+    transform: translateY(-6px) rotateY(1620deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) rotateY(1800deg) scale(1);
+  }
+}
+
+.coin-flipping {
+  animation: coin-flip-spin 1250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes colon-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.clock-colon-pulse {
+  animation: colon-pulse 1s ease-in-out infinite;
+}
+
+@keyframes result-scale-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.result-reveal-scale {
+  animation: result-scale-reveal 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Respect prefers-reduced-motion: disable transitions and keyframes */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .live-pulse-dot {
+    animation: none;
+    opacity: 1;
+  }
+  .score-digit-updating {
+    animation: none;
+  }
+  .anim-cricket-six, .anim-football-goal {
+    display: none !important;
+  }
+  .coin-flipping {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Shared Utility & Component Classes
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Button tokens */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-scoreboard);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: var(--accent-floodlight);
+  color: #0F1A14;
+  border: 1px solid var(--accent-floodlight);
+}
+
+.btn-primary:active {
+  background-color: var(--accent-floodlight-dark);
+}
+
+.btn-surface {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn-surface:active {
+  background-color: var(--bg-surface-active);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn-sm {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  border-radius: var(--radius-md);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-scoreboard);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-live {
+  background-color: rgba(232, 93, 74, 0.15);
+  color: var(--status-live);
+  border: 1px solid rgba(232, 93, 74, 0.4);
+}
+
+.badge-amber {
+  background-color: rgba(242, 201, 76, 0.15);
+  color: var(--accent-floodlight);
+  border: 1px solid rgba(242, 201, 76, 0.35);
+}
+
+.badge-muted {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
